@@ -5,6 +5,6 @@ Exchange Program
 
 DD1368 : Database Technology
 https://www.kth.se/student/kurser/kurs/DD1368?l=en
-# Laboratories
-# Homeworks
+* Laboratories
+* Homeworks
 
