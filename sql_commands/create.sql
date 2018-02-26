@@ -8,7 +8,8 @@ CREATE TABLE User (
 	name VARCHAR(128),
 	surname VARCHAR(128),
 	position VARCHAR(128),
-	PRIMARY KEY(user_id)
+	PRIMARY KEY(user_id),
+	UNIQUE(username)
 ) ENGINE=INNODB;
 
 DROP TABLE IF EXISTS Staff;
