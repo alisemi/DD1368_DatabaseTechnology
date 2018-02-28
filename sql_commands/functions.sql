@@ -2,7 +2,11 @@
 /* New User As Staff */ 
 INSERT INTO User(username, password, name, surname, position)
 	VALUES("doren", "doren123", "Doren", "Calliku", "Cleaner");
-INSERT INTO Staff(staff_id) SELECT user_id FROM User WHERE username="doren" AND NOT EXISTS(SELECT partner_id FROM Business_Partner WHERE partner_id = user_id);
+INSERT INTO Staff(staff_id) 
+SELECT user_id 
+FROM User 
+WHERE username="doren" 
+AND NOT EXISTS(SELECT partner_id FROM Business_Partner WHERE partner_id = user_id);
 
 
 /* OR As Business Partner */
@@ -28,19 +32,29 @@ INSERT INTO Staff(staff_id)
 		FROM Business_Partner 
 		WHERE partner_id = user_id);
 
-/* Delete User */ 
-WITH meeting_participate AS (
-	SELECT Participate.meeting_id, COUNT(Participate.user_id) AS Count
-	FROM Participate, (SELECT user_id FROM User WHERE username = "deleted_one") AS D_User 
-	WHERE D_User.user_id = Participate.user_id 
-	GROUP BY meeting_id),
+/* Delete User */
+
 DELETE FROM Meeting
-	WHERE meeting_id 
-	EXISTS meeting_participate 
-	AND meeting_participate.Count < 1;
+WHERE meeting_id 
+IN
+(
+	SELECT meeting_id FROM
+	(
+	SELECT Participate.meeting_id, COUNT(Participate.user_id) AS alocount
+	FROM Participate, 
+		(SELECT user_id
+		 FROM User 
+		WHERE username = "doren") 
+	AS D_User 
+	WHERE D_User.user_id = Participate.user_id
+	GROUP BY meeting_id
+	) AS T2
+	WHERE alocount < 1
+);
 
 DELETE FROM User 
-	WHERE username = "deleted_one" ;
+	WHERE username = "doren" ;
+
 
 /* Insert Team */
 INSERT INTO  Team (name, status)

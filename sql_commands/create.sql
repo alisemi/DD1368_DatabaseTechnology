@@ -14,7 +14,7 @@ CREATE TABLE User (
 
 DROP TABLE IF EXISTS Staff;
 CREATE TABLE Staff (
-	staff_id INT NOT NULL,
+	staff_id INT NOT NULL PRIMARY KEY,
 	FOREIGN KEY (staff_id)
 	REFERENCES User(user_id)
 	ON UPDATE CASCADE ON DELETE CASCADE
@@ -22,7 +22,7 @@ CREATE TABLE Staff (
 
 DROP TABLE IF EXISTS Business_Partner;
 CREATE TABLE Business_Partner (
-	partner_id INT NOT NULL,
+	partner_id INT NOT NULL PRIMARY KEY,
 	represents VARCHAR(128) NOT NULL,
 	FOREIGN KEY (partner_id)
 	REFERENCES User(user_id)
