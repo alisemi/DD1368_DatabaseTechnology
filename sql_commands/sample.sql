@@ -24,19 +24,73 @@ INSERT INTO Business_Partner (partner_id, represents) SELECT user_id, position F
 
 /* Team */
 
-INSERT INTO `Team` (`name`,`status`) VALUES ("Indianapolis",3),("Woodlands County",5),("Villafranca in Lunigiana",9),("King Township",4),("Morwell",3),("Lincoln",8),("Bünyan",10),("San Joaquín",1),("Harnoncourt",3),("Maiolati Spontini",7);
+INSERT INTO `Team` (`name`,`status`) VALUES ("Indianapolis",1),("Woodlands County",1),("Villafranca in Lunigiana",1),("King Township",1),("Morwell",1),("Lincoln",1),("Bünyan",1),("San Joaquín",1),("Harnoncourt",1),("Maiolati Spontini",1);
+
+/* Team_In */
+Insert INTO Team_In (team_name, staff_id) VALUES("Indianapolis",1),("Woodlands County",2),("Villafranca in Lunigiana",3),("King Township",4),("Morwell",5),("Lincoln",6),("Bünyan",7),("San Joaquín",8),("Harnoncourt",9),("Maiolati Spontini",10), ("Indianapolis",11),("Woodlands County",12),("Villafranca in Lunigiana",13),("King Township",14),("Morwell",15),("Lincoln",16),("Bünyan",17),("San Joaquín",18),("Harnoncourt",19),("Maiolati Spontini",20),("Indianapolis",21),("Woodlands County",22),("Villafranca in Lunigiana",23),("King Township",24),("Morwell",25),("Lincoln",26),("Bünyan",27),("San Joaquín",28),("Harnoncourt",29),("Maiolati Spontini",30), ("Indianapolis",31),("Woodlands County",32),("Villafranca in Lunigiana",33),("King Township",34),("Morwell",35),("Lincoln",36),("Bünyan",37),("San Joaquín",38),("Harnoncourt",39),("Maiolati Spontini",40)
 
 /* Meeting */
 
-INSERT INTO `Meeting` (`creator_id`,`date`,`end_time`,`start_time`) VALUES (1,"2018-02-25","06:42:11","14:42:48"),(2,"2017-09-16","08:28:06","02:44:43"),(3,"2017-08-24","18:17:56","09:55:37"),(4,"2017-08-07","08:33:49","18:28:40"),(5,"2017-06-29","05:16:41","19:09:14"),(6,"2018-03-08","13:43:31","23:42:05"),(7,"2017-12-11","14:20:08","18:24:34"),(8,"2018-07-04","18:26:10","08:59:14"),(9,"2018-01-10","05:21:04","00:44:35"),(10,"2019-02-14","00:38:15","06:19:15");
-INSERT INTO `Meeting` (`creator_id`,`date`,`end_time`,`start_time`) VALUES (11,"2018-09-29","13:20:18","13:49:05"),(12,"2018-11-06","18:04:26","09:06:30"),(13,"2019-01-22","01:58:36","18:04:55"),(14,"2019-02-24","12:06:55","15:02:06"),(15,"2018-05-05","15:44:47","19:49:40"),(16,"2018-12-26","06:21:24","21:34:28"),(17,"2017-11-24","07:43:38","04:49:26"),(18,"2017-05-14","22:30:40","05:50:40"),(19,"2017-10-04","12:14:52","10:31:29"),(20,"2018-12-27","07:58:54","07:16:36");
+INSERT INTO `Meeting` (`creator_id`,`date`,`end_time`,`start_time`) VALUES (1,"2018-02-25","06:42:11","14:42:48"),(2,"2017-09-16","08:28:06","02:44:43"),(3,"2017-08-24","18:17:56","09:55:37"),(4,"2017-08-07","08:33:49","18:28:40");
+
+/* Participate */
+INSERT INTO Participate (meeting_id, user_id)
+VALUES(1,1),
+VALUES(1,2),
+VALUES(1,3),
+VALUES(1,4),
+VALUES(1,5),
+VALUES(1,6),
+VALUES(1,85),
+VALUES(1,90),
+VALUES(2,11),
+VALUES(2,12),
+VALUES(2,13),
+VALUES(2,14),
+VALUES(2,15),
+VALUES(2,16),
+VALUES(2,86),
+VALUES(2,90),
+VALUES(3,1),
+VALUES(3,2),
+VALUES(3,3),
+VALUES(3,24),
+VALUES(3,25),
+VALUES(3,6),
+VALUES(3,85),
+VALUES(3,98),
+VALUES(4,1),
+VALUES(4,32),
+VALUES(4,33),
+VALUES(4,34),
+VALUES(4,35),
+VALUES(4,36),
+VALUES(4,80),
+VALUES(4,95);
+
+/* Meeting_Payment */
+INSERT INTO Meeting_Payment (meeting_id, team_name, amount, status)
+VALUES(1, "Indianapolis", 2000, 0),
+VALUES(2, "Woodlands County", 500, 1),
+VALUES(3, "Villafranca in Lunigiana", 4000, 1)
+VALUES(4, "King Township", 1000, 0);
+
 
 /* Available_Resource */
 
 INSERT INTO `Available_Resource` (`room_no`,`capacity`,`address`,`building_name`) VALUES (10,91,"P.O. Box 574, 1767 Nunc Ave","Palestine, State of"),(1,82,"6526 Fringilla Road","Romania"),(8,77,"Ap #226-956 Quisque Av.","Saint Vincent and The Grenadines"),(3,10,"819-3714 Odio Road","South Sudan"),(10,18,"Ap #120-6951 Sodales Street","Eritrea"),(5,72,"873-3090 Sagittis Road","Estonia"),(4,95,"P.O. Box 226, 7016 Mattis St.","Burkina Faso"),(3,16,"P.O. Box 973, 7797 Id St.","Croatia"),(3,14,"P.O. Box 847, 5511 Sem St.","Saint Barthélemy"),(8,63,"565-4373 Mauris Av.","New Caledonia");
 INSERT INTO `Available_Resource` (`room_no`,`capacity`,`address`,`building_name`) VALUES (9,46,"447-2977 Nunc Ave","Panama"),(2,56,"3829 At Av.","Namibia"),(5,98,"P.O. Box 458, 5479 Odio. Rd.","Bosnia and Herzegovina"),(3,54,"Ap #995-8521 Ullamcorper St.","Poland"),(9,10,"4300 Vestibulum. St.","Malawi"),(9,97,"4969 Ut Rd.","Eritrea"),(2,68,"921-2436 Odio St.","Germany"),(2,64,"Ap #471-5346 Nascetur Ave","Mauritius"),(2,70,"Ap #580-5850 Nunc St.","Thailand"),(1,94,"Ap #980-1600 Maecenas Av.","Wallis and Futuna");
 
+/* Booking */
+INSERT INTO Booking (meeting_id, resource_id)
+VALUES(1, 1),
+VALUES(2, 2),
+VALUES(3, 3),
+VALUES(4, 4);
+
 /* Facility */
 
 INSERT INTO `Facility` (`name`,`cost`) VALUES ("quis",334),("egestas",377),("tellus",384),("malesuada",437),("Duis",200),("est",236),("et",185),("id,",168),("dolor,",492),("arcu.",245);
+
+
 
