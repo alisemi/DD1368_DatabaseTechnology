@@ -15,7 +15,7 @@ INSERT INTO `User` (`username`,`password`,`name`,`surname`,`position`) VALUES ("
 
 /* Staff */
 
-INSERT INTO Staff (staff_id) SELECT user_id FROM User LIMIT 80;
+INSERT INTO Staff (staff_id) SELECT user_id FROM User ORDER BY user_id ASC LIMIT 50;
 
 /* Business_Partner */
 
@@ -27,7 +27,9 @@ INSERT INTO Business_Partner (partner_id, represents) SELECT user_id, position F
 INSERT INTO `Team` (`name`,`status`) VALUES ("Indianapolis",1),("Woodlands County",1),("Villafranca in Lunigiana",1),("King Township",1),("Morwell",1),("Lincoln",1),("Bünyan",1),("San Joaquín",1),("Harnoncourt",1),("Maiolati Spontini",1);
 
 /* Team_In */
-Insert INTO Team_In (team_name, staff_id) VALUES("Indianapolis",1),("Woodlands County",2),("Villafranca in Lunigiana",3),("King Township",4),("Morwell",5),("Lincoln",6),("Bünyan",7),("San Joaquín",8),("Harnoncourt",9),("Maiolati Spontini",10), ("Indianapolis",11),("Woodlands County",12),("Villafranca in Lunigiana",13),("King Township",14),("Morwell",15),("Lincoln",16),("Bünyan",17),("San Joaquín",18),("Harnoncourt",19),("Maiolati Spontini",20),("Indianapolis",21),("Woodlands County",22),("Villafranca in Lunigiana",23),("King Township",24),("Morwell",25),("Lincoln",26),("Bünyan",27),("San Joaquín",28),("Harnoncourt",29),("Maiolati Spontini",30), ("Indianapolis",31),("Woodlands County",32),("Villafranca in Lunigiana",33),("King Township",34),("Morwell",35),("Lincoln",36),("Bünyan",37),("San Joaquín",38),("Harnoncourt",39),("Maiolati Spontini",40)
+INSERT INTO Team_In (team_name, staff_id) VALUES
+("Indianapolis",1),("Woodlands County",2),("Villafranca in Lunigiana",3),("King Township",4),("Morwell",5),("Lincoln",6),("Bünyan",7),("San Joaquín",8),("Harnoncourt",9),("Maiolati Spontini",10), 
+("Indianapolis",11),("Woodlands County",12),("Villafranca in Lunigiana",13),("King Township",14),("Morwell",15),("Lincoln",16),("Bünyan",17),("San Joaquín",18),("Harnoncourt",19),("Maiolati Spontini",20),("Indianapolis",41),("Woodlands County",42),("Villafranca in Lunigiana",43),("King Township",44),("Morwell",45),("Lincoln",46),("Bünyan",47),("San Joaquín",48),("Harnoncourt",49),("Maiolati Spontini",50), ("Indianapolis",31),("Woodlands County",32),("Villafranca in Lunigiana",33),("King Township",34),("Morwell",35),("Lincoln",36),("Bünyan",37),("San Joaquín",38),("Harnoncourt",39),("Maiolati Spontini",40);
 
 /* Meeting */
 
@@ -35,45 +37,53 @@ INSERT INTO `Meeting` (`creator_id`,`date`,`end_time`,`start_time`) VALUES (1,"2
 
 /* Participate */
 INSERT INTO Participate (meeting_id, user_id)
-VALUES(1,1),
-VALUES(1,2),
-VALUES(1,3),
-VALUES(1,4),
-VALUES(1,5),
-VALUES(1,6),
-VALUES(1,85),
-VALUES(1,90),
-VALUES(2,11),
-VALUES(2,12),
-VALUES(2,13),
-VALUES(2,14),
-VALUES(2,15),
-VALUES(2,16),
-VALUES(2,86),
-VALUES(2,90),
-VALUES(3,1),
-VALUES(3,2),
-VALUES(3,3),
-VALUES(3,24),
-VALUES(3,25),
-VALUES(3,6),
-VALUES(3,85),
-VALUES(3,98),
-VALUES(4,1),
-VALUES(4,32),
-VALUES(4,33),
-VALUES(4,34),
-VALUES(4,35),
-VALUES(4,36),
-VALUES(4,80),
-VALUES(4,95);
+VALUES
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6),
+(1,85),
+(1,90);
+
+INSERT INTO Participate (meeting_id, user_id)
+VALUES
+(2,11),
+(2,12),
+(2,13),
+(2,14),
+(2,15),
+(2,16),
+(2,86),
+(2,90);
+INSERT INTO Participate (meeting_id, user_id)
+VALUES
+(3,1),
+(3,2),
+(3,3),
+(3,44),
+(3,45),
+(3,6),
+(3,85),
+(3,98);
+INSERT INTO Participate (meeting_id, user_id)
+VALUES
+(4,1),
+(4,32),
+(4,33),
+(4,34),
+(4,35),
+(4,36),
+(4,81),
+(4,95);
 
 /* Meeting_Payment */
 INSERT INTO Meeting_Payment (meeting_id, team_name, amount, status)
 VALUES(1, "Indianapolis", 2000, 0),
-VALUES(2, "Woodlands County", 500, 1),
-VALUES(3, "Villafranca in Lunigiana", 4000, 1)
-VALUES(4, "King Township", 1000, 0);
+(2, "Woodlands County", 500, 1),
+(3, "Villafranca in Lunigiana", 4000, 1),
+(4, "King Township", 1000, 0);
 
 
 /* Available_Resource */
@@ -84,9 +94,9 @@ INSERT INTO `Available_Resource` (`room_no`,`capacity`,`address`,`building_name`
 /* Booking */
 INSERT INTO Booking (meeting_id, resource_id)
 VALUES(1, 1),
-VALUES(2, 2),
-VALUES(3, 3),
-VALUES(4, 4);
+(2, 2),
+(3, 3),
+(4, 4);
 
 /* Facility */
 
