@@ -93,7 +93,7 @@ CREATE TABLE Available_Resource (
 
 DROP TABLE IF EXISTS Booking;
 CREATE TABLE Booking (
-	meeting_id INT,
+	meeting_id INT PRIMARY KEY,
 	resource_id INT,
 	FOREIGN KEY (meeting_id) REFERENCES Meeting(meeting_id)
 	ON UPDATE CASCADE ON DELETE CASCADE,

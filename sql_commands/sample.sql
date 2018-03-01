@@ -102,5 +102,14 @@ VALUES(1, 1),
 
 INSERT INTO `Facility` (`name`,`cost`) VALUES ("quis",334),("egestas",377),("tellus",384),("malesuada",437),("Duis",200),("est",236),("et",185),("id,",168),("dolor,",492),("arcu.",245);
 
+/* Facility_In */
+INSERT INTO Facility_In (facility_name, resource_id) VALUES 
+("quis",1),("egestas",2),("tellus",3),("malesuada",4),("Duis",5),("est",6),("et",7),("id,",8),("dolor,",9),("arcu.",10);
+
+INSERT INTO Facility_In (facility_name, resource_id) VALUES 
+("quis",11),("egestas",12),("tellus",13),("malesuada",14),("Duis",15),("est",16),("et",17),("id,",18),("dolor,",19),("arcu.",20);
+
+INSERT INTO Facility_In (facility_name, resource_id) VALUES 
+("quis",7),("egestas",8),("tellus",9),("malesuada",10),("Duis",11),("est",12),("et",13),("id,",14),("dolor,",15),("arcu.",16);
 
 
