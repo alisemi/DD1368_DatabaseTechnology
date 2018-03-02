@@ -1,0 +1,79 @@
+
+<form action="welcome.php" id="s" method="post">
+
+
+
+<?php
+
+		//Connection
+		$servername = "localhost";
+		$username = "root";
+		$password = "Alumni2019";
+		
+
+		try {
+			$conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
+			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      
+			$sql = "SELECT user_id, username, name, surname, position FROM User INNER JOIN Staff ON staff_id = user_id"; 
+			$stmt = $conn->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			
+				
+      
+			echo "<p>Select User :</p>";
+			foreach($result as $row) {
+				echo " <input type=\"radio\" name=\"user\" value=\" ", $row['user_id'],  "\" required> ";
+				echo $row['username'] . " - ", $row['name'], " - ", $row['surname'], " - ", $row['position'];
+				echo "<br>";
+			}
+
+		}
+		catch(PDOException $e) {
+		    echo "Error: " . $e->getMessage();
+		}
+?>
+
+
+
+
+</br>
+	<label for="date">Meeting Date : 
+	</label>
+	<input id="date" name = "date_name" type="date" value="2017-01-01"/> 
+        </br></br>
+</br>
+	<label for="start_time">Meeting Start Time : 
+	</label>
+	<input id="start_time" name = "new_start_time" type="time" value="05:00:00"/> 
+</br>
+	<label for="end_time">Meeting End Time : 
+	</label>
+	<input id="end_time"   name = "new_end_time"   type="time" value="06:00:00"/>	
+</br>
+
+<input type="submit" name="Submit Size" value="Continue"> 
+
+</form>
+
+<?php
+
+    if(isset($_POST['date'])) {
+      echo "selected size: ".htmlspecialchars($_POST['date']);
+    }
+    if(isset($_POST['start_time'])) {
+      echo "selected size: ".htmlspecialchars($_POST['start_time']);
+    }
+    if(isset($_POST['end_time'])) {
+      echo "selected size: ".htmlspecialchars($_POST['end_time']);
+    }
+
+     $conn = null;
+
+?>
+
+
+
+
+
