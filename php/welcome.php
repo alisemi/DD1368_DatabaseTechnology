@@ -83,4 +83,3 @@ WHERE Available_Resource.id NOT IN (
 	     $conn = null;
 ?> 
 
-</form>
