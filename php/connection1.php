@@ -1,5 +1,3 @@
-
-
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta charset="UTF-8">
@@ -34,7 +32,7 @@
             border-color: #212738;
             border-style: solid;
             background-color: #FFFFFF;
-            text-align: left;
+            text-align: relative;
             }
             div.page_header {
             height: 100%;
@@ -98,7 +96,7 @@
                     $username = "root";
                     $password = "Alumni2019";
                     // Create connection
-                    try {
+                   
                     $conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     
@@ -108,21 +106,22 @@
                     $result = $stmt->fetchAll();
                     ?>
 
-
-		<!--
-                <select name="drpdn" id="drpdn">
+		
+                <select name="drpdn" id="drpdn" style="align:center" class="floating_element">
                 <?php foreach ($result as $row): ?>
-                <option><?=$row['username']?></option>
+                <option><?=$row['user_id'].". ",$row['username']." (",$row['name']." ",$row['surname'].") who works in ",$row['position']. "."?></option> 
+		
                 <?php endforeach ?>
-
-
-
-
+		</select>
+		<input type="submit" name="submit" value="Book" />
+		
+	 
+        
 
                 <!-- Choose time slot and date-->
                 </br>
                 <div class="section_header">
-                    <label text-align="left" for="date">
+                    <label for="date">
                     Meeting Date : 
                     </label>
                     <input id="date" name = "date_name" type="date" value="2018-25-02" required/> 
@@ -139,8 +138,7 @@
                     </label>
                     <input id="end_time"   name = "new_end_time"   type="time" value="06:00:00" required/>	
                     </br></br>
-                    <hr>
-                    <input type="submit" name="Submit Size" value="Book Meeting"> 
+
                 </div>
                 <?php
                     if(isset($_POST['date'])) {
@@ -154,7 +152,7 @@
                     }
                      $conn = null;
                     ?> 
-            </form>
+             </form>
         </div>
     </body>
 </html>
