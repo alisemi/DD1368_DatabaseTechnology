@@ -87,87 +87,63 @@
    <body>
       <div class="main_page">
          <div class="section_header">
-            Hey ! </br>
-            Here the administrator chooses the meeting he or she has to book for the appointment. </br> 
+            Hey ! 
+            <br>Here the administrator chooses the meeting he or she has to book for the appointment. 
          </div>
-         <?php
-            //Connection
-            $servername = "localhost";
-            $username   = "root";
-            $password   = "Alumni2019";
-            
-            // Taking values from the previous form with the POST variable.
-            	$new_date = date('Y-m-d', strtotime($_POST['date_name']));
-                		
-            	$new_start_time = date('H:i:s', strtotime($_POST['new_start_time']));
-              		 
-            	$new_end_time   = date('H:i:s', strtotime($_POST['new_end_time']));
-               		 
-            	$vari = ($_POST['user']);
-               		
-            
-            // Working with the database: SELECT what one needs. 
-try {
-            	$conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
-            	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                
-            	$sql = "SELECT Available_Resource.id, Available_Resource.room_no, Available_Resource.capacity ,Available_Resource.address, Available_Resource.building_name
-            FROM Available_Resource
-            WHERE Available_Resource.id NOT IN (
-            SELECT Booking.resource_id
-            FROM   Meeting 
-            INNER JOIN Booking 
-            ON    Meeting.meeting_id  = Booking.meeting_id
-            WHERE ((Meeting.start_time BETWEEN CAST('$new_start_time' AS time) AND CAST('$new_end_time' AS time))
-            OR    (Meeting.end_time   BETWEEN CAST('$new_start_time' AS time) AND CAST('$new_end_time' AS time))
-            OR    (Meeting.start_time <= CAST('$new_start_time' AS time) AND end_time >= CAST('$new_end_time' AS time)))
-            AND   Meeting.date        = DATE('$new_date'));"; 
-            	$stmt = $conn->prepare($sql);
-            	$stmt->execute();
-            	$result = $stmt->fetchAll();
-            	
-                			// Select from Radio Buttons
-            	echo "<p>Select an available resource :</p>";
-            	echo "<form action=\"result.php\" id=\"s\" method=\"post\">";
-            	foreach($result as $row) {
-            		echo " <input type=\"radio\" name=\"resource\" value=\" ", $row['id'],       "\" required> ";
-            		
-            		echo $row['id'] . " - ", $row['room_no'], " - ", $row['capacity'], " - ", $row['address'],"-",  $row['building_name'];
-            		echo "<br>";
+         <form action="result.php" method="post" style="vertical-align: left; margin: 0px;">
+            <input type="hidden" name="userID" value="<?=$_POST['select'];?>">
+            <input type="hidden" name="sdate"  value="<?=$_POST['date'];?>">
+            <input type="hidden" name="stime"  value="<?=$_POST['start_time'];?>">
+            <input type="hidden" name="etime"  value="<?=$_POST['end_time'];?>">
+            <input type="hidden" name="resource" value="<?=$_POST['resource'];?>">
+            <?php
+               //Connection
+               $servername = "localhost";
+               $username   = "root";
+               $password   = "Alumni2019";
+               
+               
+               	$new_date       = date('Y-m-d', strtotime($_POST['date']));
+               	$new_start_time = date('H:i:s', strtotime($_POST['start_time']));
+               	$new_end_time   = date('H:i:s', strtotime($_POST['end_time']));
+               	$vari 		= ($_POST['select']);
+               
+                echo "$vari";
+               
+               
+               	$conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
+               	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                   
+               	$sql = "SELECT Available_Resource.id, Available_Resource.room_no, Available_Resource.capacity ,Available_Resource.address, Available_Resource.building_name
+               FROM Available_Resource
+               WHERE Available_Resource.id NOT IN (
+               SELECT Booking.resource_id
+               FROM   Meeting 
+               INNER JOIN Booking 
+               ON    Meeting.meeting_id  = Booking.meeting_id
+               WHERE ((Meeting.start_time BETWEEN CAST('$new_start_time' AS time) AND CAST('$new_end_time' AS time))
+               OR    (Meeting.end_time    BETWEEN CAST('$new_start_time' AS time) AND CAST('$new_end_time' AS time))
+               OR    (Meeting.start_time <= CAST('$new_start_time' AS time) AND end_time >= CAST('$new_end_time' AS time)))
+               AND   Meeting.date        = DATE('$new_date'));"; 
+               	$stmt = $conn->prepare($sql);
+               	$stmt->execute();
+               	$result = $stmt->fetchAll();
+               ?>
+            <select name='resourceSelecter' class="floating_element">
+               <?php foreach ($result as $row): ?>
+               <option><?=$row['id']//.". ",$row['room_no']." has capacity ",$row['capacity']." and is in (",$row['address']. ",",$row['building_name'].")."?></option>
+               <?php endforeach ?>
+            </select>
+            <?php
+               #$resource = $_POST['resource'];
+            	// Send to the result.php file. 
+     		if(isset($_POST['resourceSelecter'])){
+              		echo "selected size: ".htmlspecialchars($_POST['resourceSelecter']);
             	}
-            	echo "<input type=\"hidden\" name=\"userID\" value=\"$vari\">";
-            	echo "<input type=\"hidden\" name=\"sdate\" value=\"$new_date\">";
-            	echo "<input type=\"hidden\" name=\"stime\" value=\"$new_start_time\">";
-            	echo "<input type=\"hidden\" name=\"etime\" value=\"$new_end_time\">";
-            	//echo "<input type=\"submit\" name=\"submit\" id=\"submit\" class=\"button\" value=\"Submit\"/>";			
-            	echo "</form>";
-            }
-            
-            catch(PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
-            ?>
-	    <div class="section_header">
-		<input type="submit" name="submit" id="submit" class="button" value="Submit">
-	    </div>
-         <?php
-            // Send to the result.php file. 
-            if(isset($_POST[$new_date])) {
-              echo "selected size: ".htmlspecialchars($_POST[$new_date]);
-            }
-            if(isset($_POST[$new_start_time])) {
-              echo "selected size: ".htmlspecialchars($_POST[$new_start_time]);
-            }
-            if(isset($_POST[$new_end_time])) {
-              echo "selected size: ".htmlspecialchars($_POST[$new_end_time]);
-            }
-            /*if(isset($_POST['halo'])){
-              echo "selected size: ".htmlspecialchars($_POST[$vari]);
-            }*/
-                   //$_POST['vari'] = $vari;
-            
-             $conn = null;
-            ?> 
+		$conn = null;
+              ?> 
+            <input type="submit" name="submit" id="submit" class="button" value="Submit"/>
+         </form>
       </div>
    </body>
 </html>

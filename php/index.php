@@ -213,7 +213,12 @@ img {
   		<li> <a href="connection1.php">Insert Meeting</a></li>
   		<li> <a href="deletion1.php">Delete Meeting</a></li>
 		</ul> 	
+		Also, in order to check the present state of the database we can check the status of the information.
+		<ul style="list-style-type:circle">
+		<li> <a href="status.php">Present Status of the dd1368 database.</a></li>
+		</ul>
           </p>
+
         </div>
 
         <div class="section_header">
