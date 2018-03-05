@@ -105,7 +105,7 @@
                $stmt->execute();
                $result = $stmt->fetchAll();
                ?>
-            <div style="align:left">
+            <div style="text-align:left">
                <?php
                   // Print everything
                   foreach($result as $row) {

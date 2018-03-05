@@ -87,8 +87,7 @@
    <body>
       <div class="main_page">
          <div class="section_header">
-            Hey ! 
-            <br>Here the administrator chooses the meeting he or she has to book for the appointment. 
+Available resources. 
          </div>
          <form action="result.php" method="post" style="vertical-align: left; margin: 0px;">
 	    <input type="hidden" name="userID" value="<?=$_POST['select'];?>">
@@ -109,9 +108,7 @@
                	$new_end_time   = date('H:i:s', strtotime($_POST['end_time']));
                	$vari 		= ($_POST['select']);
 				
-                echo "$vari";
 		
-
                	$conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
                	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                    
@@ -131,6 +128,19 @@
                	$result = $stmt->fetchAll();
              ?>
 
+            <div style="text-align:left">
+               <?php
+                  // Print everything
+                  foreach($result as $row) {
+                  	echo "<li>" ;
+                  	echo "Room with id ", $row['id'].", with number ",$row['room_no'].", capacity ",$row['capacity']." found at ",$row['address']. ", in ", $row['building_name'].".";
+                  	echo "</li>";
+                  }
+		  
+                  ?>
+            </div>
+
+    	    Choose the resource by clicking one of the selection options and then Submit.
             <select name='resourceSelecter' class="floating_element">
                <?php foreach ($result as $row): ?>
                <option><?=$row['id']//.". ",$row['room_no']." has capacity ",$row['capacity']." and is in (",$row['address']. ",",$row['building_name'].")."?></option>
@@ -144,14 +154,14 @@
 	  
                // Send to the result.php file. 
 	       if(isset($_POST['resourceSelecter'])){
+		
                  echo "selected size: ".htmlspecialchars($_POST['resourceSelecter']);
                }
 
-               
                 $conn = null;
                ?> 
-		
-            <input type="submit" name="submit" id="submit" class="button" value="Submit"/>
+		<br><br>
+            <input type="submit" name="submit" id="submit" class="button" style="float:right" value="Submit"/>
          </form>
       </div>
    </body>
