@@ -86,10 +86,6 @@
    </head>
    <body>
       <div class="main_page">
-         <div class="section_header">
-            Hey ! </br>
-            Here the administrator checks the result of the meeting he or she added.</br> 
-         </div>
          <form action="status.php" method="post" style="vertical-align: left; margin: 0px;">
             <?php
                //Connection
@@ -132,6 +128,28 @@
                
                       $sql = "INSERT INTO Booking(meeting_id, resource_id) (SELECT meeting_id, '$resource_res' FROM Meeting WHERE Meeting.meeting_id = '$meeting_id');";
                	$conn->exec($sql);
+?>
+
+
+            <div class="section_header">
+               <label for="payment"> 
+               The creator, the meeting id, and the resource id it booked.
+               </label>
+               <br>
+            </div>
+            <?php
+               $sql = "SELECT Meeting.creator_id, Booking.meeting_id, Booking.resource_id FROM Booking INNER JOIN Meeting ON Booking.meeting_id = Meeting.meeting_id WHERE Booking.meeting_id = '$meeting_id';";
+               $stmt = $conn->prepare($sql);
+               $stmt->execute();
+               $result = $stmt->fetchAll();
+               
+               // Print everything
+               foreach($result as $row) {
+               	echo " <li>" ;
+               	echo "Creator: ",$row['creator_id']." - Meeting: ", $row['meeting_id'] . " - Resource: ", $row["resource_id"];
+               	echo "</li>";
+               }
+               
                	
                	$sql = "SELECT * FROM Meeting;";
                	$stmt = $conn->prepare($sql);
@@ -153,26 +171,8 @@
                }
                
                echo "<br><p><Booking:</>";
-               ?>
-            <div class="section_header">
-               <label for="payment"> 
-               The creator, the meeting id, and the resource id it booked.
-               </label>
-               <br>
-            </div>
-            <?php
-               $sql = "SELECT Meeting.creator_id, Booking.meeting_id, Booking.resource_id FROM Booking INNER JOIN Meeting ON Booking.meeting_id = Meeting.meeting_id WHERE Booking.meeting_id = '$meeting_id';";
-               $stmt = $conn->prepare($sql);
-               $stmt->execute();
-               $result = $stmt->fetchAll();
                
-               // Print everything
-               foreach($result as $row) {
-               	echo " <li>" ;
-               	echo "Creator: ",$row['creator_id']." - Meeting: ", $row['meeting_id'] . " - Resource: ", $row["resource_id"];
-               	echo "</li>";
-               }
-               
+
                
                $sql = "INSERT INTO Meeting_Payment(meeting_id, team_name, amount, status)
                	(SELECT '$meeting_id', Team_In.team_name, SUM( Facility.cost ), 0 

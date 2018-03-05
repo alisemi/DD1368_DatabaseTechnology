@@ -91,26 +91,27 @@
             <br>Here the administrator chooses the meeting he or she has to book for the appointment. 
          </div>
          <form action="result.php" method="post" style="vertical-align: left; margin: 0px;">
-            <input type="hidden" name="userID" value="<?=$_POST['select'];?>">
-            <input type="hidden" name="sdate"  value="<?=$_POST['date'];?>">
-            <input type="hidden" name="stime"  value="<?=$_POST['start_time'];?>">
-            <input type="hidden" name="etime"  value="<?=$_POST['end_time'];?>">
-            <input type="hidden" name="resource" value="<?=$_POST['resource'];?>">
+	    <input type="hidden" name="userID" value="<?=$_POST['select'];?>">
+	    <input type="hidden" name="sdate"  value="<?=$_POST['date'];?>">
+	    <input type="hidden" name="stime"  value="<?=$_POST['start_time'];?>">
+	    <input type="hidden" name="etime"  value="<?=$_POST['end_time'];?>">
+	    <input type="hidden" name="resource" value="<?=$_POST['resource'];?>">
+						
             <?php
                //Connection
                $servername = "localhost";
                $username   = "root";
                $password   = "Alumni2019";
                
-               
+ 
                	$new_date       = date('Y-m-d', strtotime($_POST['date']));
                	$new_start_time = date('H:i:s', strtotime($_POST['start_time']));
                	$new_end_time   = date('H:i:s', strtotime($_POST['end_time']));
                	$vari 		= ($_POST['select']);
-               
+				
                 echo "$vari";
-               
-               
+		
+
                	$conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
                	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                    
@@ -128,20 +129,28 @@
                	$stmt = $conn->prepare($sql);
                	$stmt->execute();
                	$result = $stmt->fetchAll();
-               ?>
+             ?>
+
             <select name='resourceSelecter' class="floating_element">
                <?php foreach ($result as $row): ?>
                <option><?=$row['id']//.". ",$row['room_no']." has capacity ",$row['capacity']." and is in (",$row['address']. ",",$row['building_name'].")."?></option>
                <?php endforeach ?>
             </select>
-            <?php
-               #$resource = $_POST['resource'];
-            	// Send to the result.php file. 
-     		if(isset($_POST['resourceSelecter'])){
-              		echo "selected size: ".htmlspecialchars($_POST['resourceSelecter']);
-            	}
-		$conn = null;
-              ?> 
+
+		<?php
+		#$resource = $_POST['resource'];
+
+	    
+	  
+               // Send to the result.php file. 
+	       if(isset($_POST['resourceSelecter'])){
+                 echo "selected size: ".htmlspecialchars($_POST['resourceSelecter']);
+               }
+
+               
+                $conn = null;
+               ?> 
+		
             <input type="submit" name="submit" id="submit" class="button" value="Submit"/>
          </form>
       </div>

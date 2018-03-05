@@ -87,10 +87,9 @@
    <body>
       <div class="main_page">
          <div class="section_header">
-		<br>
-            Choose the staff who will insert the meeting.<br> <br>
+            Choose staff and time slots.<br> 
          </div>
-         <form action="welcome.php" method="POST" style="float:left" margin: 0px;">
+         <form action="welcome.php" method="POST" style="vertical-align: lef margin: 0px;">
             <?php
                //Connection to database
                $servername = "localhost";
@@ -105,15 +104,18 @@
                $stmt = $conn->prepare($sql);
                $stmt->execute();
                $result = $stmt->fetchAll();
-      
-		foreach($result as $row) {
-			echo " <input type=\"radio\" name=\"meeting\" value=\" ", $row['meeting_id'],  "\" required> ";
-			echo $row['user_id'] . ". Username: ", $row['username'], " who works as ", $row['position'], " with full name as ", $row['name']." " ,$row['surname'].".";
-			echo "<br>";
-		}
-
-?>
-<input type="submit" name="user_info" value="Check available resources" style="float:right"/>
+               ?>
+            <div style="align:left">
+               <?php
+                  // Print everything
+                  foreach($result as $row) {
+                  	echo "<li>" ;
+                  	echo $row['user_id'].". ",$row['username']." (",$row['name']." ",$row['surname'].") who works as ",$row['position']. ".";
+                  	echo "</li>";
+                  }
+   		
+                  ?>
+            </div>
 
             <!-- Choose time slot and date-->
             <br>
@@ -152,13 +154,14 @@
                if(isset($_POST['select'])) {
                  echo "selected size: ".htmlspecialchars($_POST['select']);
                }
-?>
-      
-              <?php
                 $conn = null;
                ?> 
- 
-           
+            <select name='select' class="floating_element">
+               <?php foreach ($result as $row): ?>
+               <option><?=$row['user_id']#.". ",$row['username']." (",$row['name']." ",$row['surname'].") who works in ",$row['position']. "."?></option>
+               <?php endforeach ?>
+            </select>
+            <input type="submit" name="user_info" value="Book Meeting" style="color:blue"/>
          </form>
       </div>
    </body>
