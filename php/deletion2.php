@@ -128,8 +128,9 @@ OR ( Meeting.date = CURDATE() AND Meeting.start_time > CURTIME())";
 			echo "</li>";
 		}
 		echo "";
-		echo "Deleted meeting with id $vari.";
-			
+		
+		echo "If the meeting with id $vari was after the current date it has been deleted. Otherwise, it is still in the database, as one can check in the above table.";
+			 
       		}
 
 		catch(PDOException $e) {

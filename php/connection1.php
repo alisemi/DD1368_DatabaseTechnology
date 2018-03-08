@@ -126,7 +126,11 @@
                Meeting Date : 
                </label>
 <!-- To be added constriction for dateInput> dateNow. In php it is written in the following form.date("Y/m/d")-->
-               <input id="date" name = "date" type="date" value="2018-25-02" required/> 
+	      <input type="date" name="date" type="date" min=
+    				 <?php
+         			echo date('Y-m-d');
+     				?>
+		required />
                </br></br>
                <hr>
                <label for="start_time">

@@ -102,12 +102,12 @@
                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);?>
                <div class="section_header">
                <label for="payment"> 
-                  User table. It includes Staff and Business Partners.
+                  User table. It includes Staff and Business Partners with active status.
                </label>
                <br>
             </div>
                <?php
-               $sql = "SELECT user_id, username, name, surname, position FROM User"; 
+               $sql = "SELECT user_id, username, name, surname, position FROM User WHERE status = 1"; 
                $stmt = $conn->prepare($sql);
                $stmt->execute();
                $result = $stmt->fetchAll();
