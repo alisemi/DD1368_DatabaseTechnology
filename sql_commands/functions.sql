@@ -33,8 +33,9 @@ INSERT INTO Staff(staff_id)
 		WHERE partner_id = user_id);
 
 /* Delete User */
+/* In the moment we want to delete a user, we just turn its status to 0. So the meetings he has created will not have to be deleted.*/
 
-DELETE FROM Meeting
+/* DELETE FROM Meeting
 WHERE meeting_id 
 IN
 (
@@ -50,10 +51,9 @@ IN
 	GROUP BY meeting_id
 	) AS T2
 	WHERE alocount < 2
-);
+);*/
 
-DELETE FROM User 
-	WHERE username = "doren" ;
+UPDATE User SET status = 0 WHERE username = "doren" ;
 
 
 /* Insert Team */
@@ -106,7 +106,7 @@ WHERE Available_Resource.id NOT IN (
 	AND   Meeting.date        = '2011-01-01')
 AND Available_Resource.id = 13;
 
-
+/*Limit to insert to one team*/
 INSERT INTO Meeting_Payment 
 SELECT 6, Team_In.team_name, SUM( Facility.cost ), 0 
 FROM   Team_In , Facility
@@ -122,7 +122,8 @@ AND Facility.name IN
 	(SELECT DISTINCT Facility_In.facility_name 
 	FROM    Facility_In
 	WHERE   Facility_In.resource_id = 13)
-GROUP BY Team_In.team_name;
+GROUP BY Team_In.team_name
+LIMIT 1;
 
 
 /* Book an unbooked meeting*/

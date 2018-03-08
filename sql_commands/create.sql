@@ -8,6 +8,7 @@ CREATE TABLE User (
 	name VARCHAR(128),
 	surname VARCHAR(128),
 	position VARCHAR(128),
+	status INT NOT NULL,
 	PRIMARY KEY(user_id),
 	UNIQUE(username)
 ) ENGINE=INNODB;
