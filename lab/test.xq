@@ -40,23 +40,6 @@ return $count1 div ($count2 + $count1)
 
 (:3. :)
 (:
-for $lake in $lakes
-let $country := data($lake/@country)
-  for $encompassed in doc("mondial.xml")//country[@car_code= $country]/encompassed
-  return <li>{$encompassed} <br></br>{$lake}</li>
-:)
-
-(:
-for $lake in doc("mondial.xml")//lake[@island]
-let $country := data($lake/@country)
-let $percentage :=
-  for $encompassed in doc("mondial.xml")//country[@car_code= $country]/encompassed
-  return <li>{data($encompassed/@continent)} - {(data($lake/area)*data($encompassed/@percentage)) div 100} </li>
-return $percentage
-:)
-
-
-
 let $areas :=
   for $lake in doc("mondial.xml")//lake[@island]
     let $country := data($lake/@country)
@@ -66,7 +49,49 @@ let $continents := data($areas/@continent)
 let $distinct-continents := distinct-values($continents)
 for $continent in $distinct-continents
   return <area_sum continent="{$continent}">{sum($areas[@continent = $continent])}</area_sum>
+:)
 
+(:4. :)
+  
 
+let $country_future_pop :=
+for $country in doc("mondial.xml")//country
+  return <country>
+  <future_population continent="{$country/encompassed/@continent}">
+   {data($country/population[@year =  max($country/population/@year)])
+  * math:pow((1+0.01*data($country/population_growth)),50)} 
+  </future_population>
+  </country>
+  
+let $country_current_pop :=
+for $country in doc("mondial.xml")//country
+  return <country>
+  <current_population continent="{$country/encompassed/@continent}">
+   {data($country/population[@year =  max($country/population/@year)])} 
+  </current_population>
+  </country>
+  
+let $country_future_pop_N := $country_future_pop/*[normalize-space()]
+let $country_current_pop_N := $country_current_pop/*[normalize-space()]
+let $continents := distinct-values(data(doc("mondial.xml")//country/encompassed/@continent))
+
+let $continent_pop := 
+for $continent in $continents
+  return <continent_pop continent="{$continent}">
+  <current>{sum($country_current_pop_N[@continent = $continent])}
+  </current>
+  <future>{sum($country_future_pop_N[@continent = $continent])}
+  </future>
+  <difference>
+  {sum($country_future_pop_N[@continent = $continent]) - sum($country_current_pop_N[@continent = $continent])}
+   </difference>
+   <ratio>
+   {sum($country_future_pop_N[@continent = $continent]) div sum($country_current_pop_N[@continent = $continent])}
+   </ratio>
+   </continent_pop>
+
+for $continent in $continent_pop
+  where $continent/difference = min($continent_pop/difference) or $continent/difference = max($continent_pop/difference)
+  return $continent
 
 
