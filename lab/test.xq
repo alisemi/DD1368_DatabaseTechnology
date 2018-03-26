@@ -26,15 +26,12 @@ let $count1 := count(for $prov in doc("mondial.xml")/mondial/country/province
   where(not( $unlucky = $prov/@id ))
   return  $prov/name
 )
-
 let $count2 := count(for $prov in doc("mondial.xml")/mondial/country/province
   let $unlucky := distinct-values( doc("mondial.xml")/mondial/sea/located/@province)
   where( $unlucky = $prov/@id )
   return  $prov/name
 )
-
 return $count1 div ($count2 + $count1)
-
 :)
 
 
@@ -53,7 +50,7 @@ for $continent in $distinct-continents
 
 (:4. :)
   
-
+(:
 let $country_future_pop :=
 for $country in doc("mondial.xml")//country
   return <country>
@@ -92,6 +89,36 @@ for $continent in $continents
 
 for $continent in $continent_pop
   where $continent/difference = min($continent_pop/difference) or $continent/difference = max($continent_pop/difference)
-  return $continent
+return $continent
 
+:)
 
+let $eu_organizations :=
+for $organization in doc("mondial.xml")//organization
+  let $headq := $organization/@headq
+  let $country_code := doc("mondial.xml")//city[@id = $headq]/@country
+  where doc("mondial.xml")//country[@car_code = $country_code]/encompassed[@continent = "europe"]
+  and contains(data($organization/name), "International")
+  return $organization
+
+let $eu_countries_organization :=
+for $organization in $eu_organizations
+  let $countries := tokenize( data($organization/members/@country)[1], '\s')
+  for $country in $countries
+  where doc("mondial.xml")//country[@car_code = $country]/encompassed[@continent = "europe"]
+  return <organization country="{$country}" id="{$organization/@id}">{$organization}</organization>
+
+let $ids := distinct-values($eu_countries_organization/@id)
+
+let $counts :=
+for $id in $ids
+  return <org id="{$id}">{count($eu_countries_organization[@id = $id])}</org>
+
+let $org_id :=
+for $count in $counts
+where $count = max($counts)
+return $count
+
+for $org in $eu_organizations
+  return $org[@id = $org_id/@id]
+ 
