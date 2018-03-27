@@ -93,6 +93,8 @@ return $continent
 
 :)
 
+(: 5th 
+
 let $eu_organizations :=
 for $organization in doc("mondial.xml")//organization
   let $headq := $organization/@headq
@@ -121,4 +123,23 @@ return $count
 
 for $org in $eu_organizations
   return $org[@id = $org_id/@id]
+ :)
  
+ 
+ (: 6 :)
+let $american := (
+for $country in doc("mondial.xml")/mondial/country
+where $country/encompassed/@continent="america"
+return $country/@car_code
+)
+
+let $cities := (
+  for $city in doc("mondial.xml")/mondial/country/city
+  where $city/population[@year = max($city/population/@year)] > 100000
+  return $city/@id
+)
+
+for $airport in doc("mondial.xml")/mondial/airport
+where $airport/@city = $cities
+return <airport city="{$airport/@city}">{data($airport/name)}</airport>
+
