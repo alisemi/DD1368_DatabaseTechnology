@@ -143,3 +143,12 @@ for $airport in doc("mondial.xml")/mondial/airport
 where $airport/@city = $cities
 return <airport city="{$airport/@city}">{data($airport/name)}</airport>
 
+(: 7:)
+
+for $country in doc("mondial.xml")//country
+let $earliest := round-half-to-even($country/population[@year =  min($country/population/@year)], 1)
+let $latest   := round-half-to-even( $country/population[@year =  max($country/population/@year)], 1)
+let $ratio    :=round-half-to-even(  data($latest) div data($earliest),1)
+where  $ratio > 10
+return <country earliest="{$earliest}" latest= "{$latest}" ratio ="{$ratio}"> {data($country/name)}</country>
+
