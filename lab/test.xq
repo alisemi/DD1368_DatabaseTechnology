@@ -149,6 +149,7 @@ return <country earliest="{$earliest}" latest= "{$latest}" ratio ="{$ratio}"> {d
 :)
 
 (:8 too slow but works:)
+(:
 let $cities := 
 for $city in doc("mondial.xml")//city
 where $city/population > 5000000
@@ -176,3 +177,60 @@ return <two first="{$distance1/@from}" second="{$distance2/@from}"
 for $foo in $two
 where $foo = max($two)
 return $foo
+:)
+
+(: 9 :)
+
+(: This function just shows the rivers in the river system, kept for demonstration 
+and study:)
+declare function local:river_feed(
+   $queue  as element(river)*  
+) as element(river)*
+{
+   if ( empty($queue) ) then (
+      ()
+   )
+   else (
+      let $more_id := doc("mondial.xml")//river/to[@water = $queue/@id]/../@id
+      for $id in $more_id
+      return
+         ( 
+           doc("mondial.xml")//river[@id = $id],
+           local:river_feed( doc("mondial.xml")//river[@id = $id] )
+         )
+   )
+};
+
+(: This function calculates longest river system for given river, given river length
+is not included:)
+declare function local:river_feed2(
+   $queue  as element(river)*  
+) as xs:double*
+{
+    
+   let $more_id := doc("mondial.xml")//river/to[@water = $queue/@id]/../@id
+   return 
+   if ( empty($more_id) ) then (
+      0
+   )
+   else (
+      for $id in $more_id 
+      return
+         ( max(
+           data(doc("mondial.xml")//river[@id = $id]/length) + 
+           local:river_feed2( doc("mondial.xml")//river[@id = $id] )[1]
+           )
+         )
+        
+   )
+};
+
+
+let $nile_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Nil"])
+let $rhein_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Rhein"])
+let $amazonas_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Amazonas"])
+
+return 'Nile' || ': ' || doc("mondial.xml")//river[@id = "river-Nil"]/length + max($nile_system)  || '&#xa;' || 
+'Rhein' || ': ' || doc("mondial.xml")//river[@id = "river-Rhein"]/length + max($rhein_system) || '&#xa;' || 
+'Amazonas' || ': ' || doc("mondial.xml")//river[@id = "river-Amazonas"]/length + max($amazonas_system)
+
