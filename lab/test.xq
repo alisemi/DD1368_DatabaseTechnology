@@ -71,7 +71,6 @@ for $country in doc("mondial.xml")//country
 let $country_future_pop_N := $country_future_pop/*[normalize-space()]
 let $country_current_pop_N := $country_current_pop/*[normalize-space()]
 let $continents := distinct-values(data(doc("mondial.xml")//country/encompassed/@continent))
-
 let $continent_pop := 
 for $continent in $continents
   return <continent_pop continent="{$continent}">
@@ -86,15 +85,12 @@ for $continent in $continents
    {sum($country_future_pop_N[@continent = $continent]) div sum($country_current_pop_N[@continent = $continent])}
    </ratio>
    </continent_pop>
-
 for $continent in $continent_pop
   where $continent/difference = min($continent_pop/difference) or $continent/difference = max($continent_pop/difference)
 return $continent
-
 :)
 
 (: 5th 
-
 let $eu_organizations :=
 for $organization in doc("mondial.xml")//organization
   let $headq := $organization/@headq
@@ -102,31 +98,26 @@ for $organization in doc("mondial.xml")//organization
   where doc("mondial.xml")//country[@car_code = $country_code]/encompassed[@continent = "europe"]
   and contains(data($organization/name), "International")
   return $organization
-
 let $eu_countries_organization :=
 for $organization in $eu_organizations
   let $countries := tokenize( data($organization/members/@country)[1], '\s')
   for $country in $countries
   where doc("mondial.xml")//country[@car_code = $country]/encompassed[@continent = "europe"]
   return <organization country="{$country}" id="{$organization/@id}">{$organization}</organization>
-
 let $ids := distinct-values($eu_countries_organization/@id)
-
 let $counts :=
 for $id in $ids
   return <org id="{$id}">{count($eu_countries_organization[@id = $id])}</org>
-
 let $org_id :=
 for $count in $counts
 where $count = max($counts)
 return $count
-
 for $org in $eu_organizations
   return $org[@id = $org_id/@id]
  :)
  
  
- (: 6 :)
+ (: 6
 let $american := (
 for $country in doc("mondial.xml")/mondial/country
 where $country/encompassed/@continent="america"
@@ -143,7 +134,10 @@ for $airport in doc("mondial.xml")/mondial/airport
 where $airport/@city = $cities
 return <airport city="{$airport/@city}">{data($airport/name)}</airport>
 
-(: 7:)
+:)
+
+
+(: 7
 
 for $country in doc("mondial.xml")//country
 let $earliest := round-half-to-even($country/population[@year =  min($country/population/@year)], 1)
@@ -152,3 +146,33 @@ let $ratio    :=round-half-to-even(  data($latest) div data($earliest),1)
 where  $ratio > 10
 return <country earliest="{$earliest}" latest= "{$latest}" ratio ="{$ratio}"> {data($country/name)}</country>
 
+:)
+
+(:8 too slow but works:)
+let $cities := 
+for $city in doc("mondial.xml")//city
+where $city/population > 5000000
+return $city
+
+let $distances := 
+for $city in $cities
+for $other in $cities
+return <distance from="{$city/@id}" to="{$other/@id}">
+{math:sqrt( math:pow( (abs(data($city/latitude)-data($other/latitude) ) * 111),2 ) +
+math:pow( (abs(data($city/longitude)-data($other/longitude) ) * 111),2 ) )}</distance>
+
+
+let $two :=
+for $distance1 in $distances
+for $distance2 in $distances
+where $distance1/@to = $distance2/@from
+and ($distance1/@to != $distance1/@from and $distance2/@to != $distance2/@from)
+and $distance2/@to != $distance1/@from
+
+let $third := $distances[@from = $distance2/@to and @to = $distance1/@from]
+return <two first="{$distance1/@from}" second="{$distance2/@from}"
+ third="{$third/@from}">{sum($distance1 + $distance2 + $third ) }</two>
+
+for $foo in $two
+where $foo = max($two)
+return $foo
