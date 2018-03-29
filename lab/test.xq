@@ -225,7 +225,7 @@ declare function local:river_feed2(
    )
 };
 
-
+(:
 let $nile_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Nil"])
 let $rhein_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Rhein"])
 let $amazonas_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Amazonas"])
@@ -233,4 +233,39 @@ let $amazonas_system := local:river_feed2(doc("mondial.xml")//river[@id = "river
 return 'Nile' || ': ' || doc("mondial.xml")//river[@id = "river-Nil"]/length + max($nile_system)  || '&#xa;' || 
 'Rhein' || ': ' || doc("mondial.xml")//river[@id = "river-Rhein"]/length + max($rhein_system) || '&#xa;' || 
 'Amazonas' || ': ' || doc("mondial.xml")//river[@id = "river-Amazonas"]/length + max($amazonas_system)
+:)
+
+(: C :)
+
+(: C-1 :)
+declare function local:cross_border(
+   $cross_number as xs:integer,
+   $current  as element(country)*,
+   $visited as element(country)*  
+)
+{
+  let $borders := 
+  for $border in $current/border
+  where not (exists(doc("mondial.xml")//country[@car_code = data($border/@country)] intersect $visited))
+  return doc("mondial.xml")//country[@car_code = data($border/@country)]
+  return
+   if ( empty($borders) or $cross_number > 5) then (
+      ()
+   )
+   else (
+      for $border in $borders
+      return
+         ( 
+           $border/name  || '-' || $cross_number, 
+           local:cross_border( $cross_number + 1, $border, ($visited, $borders)  )
+         )
+   )
+};
+
+let $foo := distinct-values(local:cross_border(1,doc("mondial.xml")//country[@car_code = 'S'], (doc("mondial.xml")//country[@car_code = 'S']) ) )
+for $bar in $foo
+return $bar
+
+
+
 
