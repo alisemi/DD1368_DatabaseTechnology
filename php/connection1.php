@@ -94,7 +94,7 @@
                //Connection to database
                $servername = "localhost";
                $username = "root";
-               $password = "Alumni2019";
+               $password = "jaja123";
                // Create connection
                
                $conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);

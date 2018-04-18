@@ -95,7 +95,7 @@
                //Connection
                $servername = "localhost";
                $username   = "root";
-               $password   = "Alumni2019";
+               $password   = "jaja123";
                
                
                $conn = new PDO("mysql:host=$servername;dbname=dd1368", $username, $password);
@@ -134,7 +134,7 @@
                	// Print everything
                	foreach($result as $row) {
                		echo " <li>" ;
-               		echo "For the meeting with id ", $row['meeting_id']." which will happen on ", $row['date']." between time ", $row['meeting_id']." and ", $row['meeting_id']." the creator is the user with id ",$row['creator_id'].".";
+               		echo "For the meeting with id ", $row['meeting_id']." which will happen on ", $row['date']." between time ", $row['start_time']." and ", $row['end_time']." the creator is the user with id ",$row['creator_id'].".";
                		echo "</li>";
                	}
                     ?>

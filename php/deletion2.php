@@ -98,7 +98,7 @@
 		//Connection
 		$servername = "localhost";
 		$username   = "root";
-		$password   = "Alumni2019";
+		$password   = "jaja123";
 		
 		// Taking values from the previous form with the POST variable.
  		$vari = ($_POST['meeting']);

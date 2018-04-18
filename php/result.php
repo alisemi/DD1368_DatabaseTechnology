@@ -91,11 +91,12 @@
                //Connection
                $servername = "localhost";
                $username   = "root";
-               $password   = "Alumni2019";
+               $password   = "jaja123";
                
                // Taking values from the previous form with the POST variable.    
                $vari_res = $_POST['userID'];
                $resource_res = $_POST['resourceSelecter'];   
+	       $team_sel = $_POST['teamSelecter']; 	
                $sdate = date('Y-m-d', strtotime($_POST['sdate']));
                $stime = date('H:i:s', strtotime($_POST['stime']));
                $etime = date('H:i:s', strtotime($_POST['etime']));
@@ -175,24 +176,14 @@
 
                
                $sql = "INSERT INTO Meeting_Payment(meeting_id, team_name, amount, status)
-               	(SELECT '$meeting_id', Team_In.team_name, SUM( Facility.cost ), 0 
-               	FROM   Team_In , Facility
-               	WHERE Team_In.staff_id IN (
-               		SELECT DISTINCT creator_id
-               		FROM Meeting 
-               		WHERE creator_id IN 
-               			(SELECT user_id 
-               			FROM User 
-               			WHERE User.user_id = '$vari_res'
-               			)
-               	)
-               	AND Facility.name IN 
+               	(SELECT '$meeting_id', '$team_sel', SUM( Facility.cost ), 0 
+               	FROM   Facility
+               	WHERE Facility.name IN 
                		(
                		SELECT DISTINCT Facility_In.facility_name 
                		FROM    Facility_In
                		WHERE   Facility_In.resource_id = '$resource_res'
                		)
-               	GROUP BY Team_In.team_name
                	);";
                $conn->exec($sql);
                

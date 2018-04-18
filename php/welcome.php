@@ -100,9 +100,9 @@ Available resources.
                //Connection
                $servername = "localhost";
                $username   = "root";
-               $password   = "Alumni2019";
+               $password   = "jaja123";
                
- 
+ 		$user_ID   	= $_POST['select'];
                	$new_date       = date('Y-m-d', strtotime($_POST['date']));
                	$new_start_time = date('H:i:s', strtotime($_POST['start_time']));
                	$new_end_time   = date('H:i:s', strtotime($_POST['end_time']));
@@ -143,21 +143,40 @@ Available resources.
     	    Choose the resource by clicking one of the selection options and then Submit.
             <select name='resourceSelecter' class="floating_element">
                <?php foreach ($result as $row): ?>
-               <option><?=$row['id']//.". ",$row['room_no']." has capacity ",$row['capacity']." and is in (",$row['address']. ",",$row['building_name'].")."?></option>
+               <option><?=$row['id']?></option>
                <?php endforeach ?>
             </select>
 
-		<?php
-		#$resource = $_POST['resource'];
 
-	    
-	  
+            <?php  
+               	$sql = "SELECT team_name FROM Team_In WHERE staff_id= $user_ID;"; 
+               	$stmt = $conn->prepare($sql);
+               	$stmt->execute();
+               	$result = $stmt->fetchAll();
+             ?>
+
+	  <div class="section_header">
+		Choose the team.
+	  </div>
+    	    
+            <select name='teamSelecter' class="floating_element">
+               <?php foreach ($result as $row): ?>
+               <option><?=$row['team_name']?></option>
+               <?php endforeach ?>
+            </select>
+
+
+		<?php
+		#$resource = $_POST[''];
                // Send to the result.php file. 
 	       if(isset($_POST['resourceSelecter'])){
 		
                  echo "selected size: ".htmlspecialchars($_POST['resourceSelecter']);
                }
-
+	       if(isset($_POST['teamSelecter'])){
+		
+                 echo "selected size: ".htmlspecialchars($_POST['teamSelecter']);
+               }
                 $conn = null;
                ?> 
 		<br><br>

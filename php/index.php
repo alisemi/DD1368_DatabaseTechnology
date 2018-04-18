@@ -235,9 +235,9 @@ img {
   		<li> This is the Relational Diagram. You can also find it in github <a href=//github.com/DorenCalliku/DD1368_DatabaseTechnology/blob/master/diagram/lab2-relational.png>here</a>. </li>
 		</ul>  
 		</br> </br> <hr>
-                 <img src="er.jpg"     alt="Entity Relationship Diagram" > 
+                 <img src="er.png"     alt="Entity Relationship Diagram" > 
 		</br> </br> <hr>
-		 <img src="lab2-relational.jpg" alt="Relational Diagram" >
+		 <img src="lab2-relational.png" alt="Relational Diagram" >
           </p>
         </div>
 

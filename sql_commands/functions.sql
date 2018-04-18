@@ -1,17 +1,21 @@
 
 /* New User As Staff */ 
-INSERT INTO User(username, password, name, surname, position)
-	VALUES("doren", "doren123", "Doren", "Calliku", "Cleaner");
+INSERT INTO User(username, password, name, surname, position, status)
+	VALUES("doren", "doren123", "Doren", "Calliku", "Cleaner", 1);
 INSERT INTO Staff(staff_id) 
 SELECT user_id 
 FROM User 
 WHERE username="doren" 
 AND NOT EXISTS(SELECT partner_id FROM Business_Partner WHERE partner_id = user_id);
 
+/* Remember that a User is supposed to join to a Team initially as it is not on GUI part, we are doing manually for now */
+INSERT INTO Team_In(team_name, staff_id) 
+	SELECT "Team1", User.user_id FROM Team, User WHERE Team.status=1 AND Team.name="Team1" AND User.username = "doren";
+
 
 /* OR As Business Partner */
-INSERT INTO User(username, password, name, surname, position)
-	VALUES("ali", "ali123", "Ali", "Yenimol", "Business");
+INSERT INTO User(username, password, name, surname, position, status)
+	VALUES("ali", "ali123", "Ali", "Yenimol", "Business", 1);
 INSERT INTO Business_Partner(partner_id, represents) 
 	SELECT user_id, "His Company" 
 	FROM User 
@@ -58,23 +62,25 @@ UPDATE User SET status = 0 WHERE username = "doren" ;
 
 /* Insert Team */
 INSERT INTO  Team (name, status)
-	VALUES ("new_team", 1) 
-	ON DUPLICATE KEY UPDATE
-	status = 1;
+	VALUES ("new_team", 1);
 
 INSERT INTO Team_In(team_name, staff_id) 
-	VALUES( "new_team", 1), 
-	( "new_team", 2);
+	SELECT "new_team", 1 FROM Team WHERE status=1 AND name="new_team";
+
 
 /* Delete Team */
 UPDATE Team
 	SET status = 0
 	WHERE name = "deleted_one";
-
+/*
 DELETE FROM Team_In WHERE Team_In.team_name = "deleted_one";
+*/
 
 
-/* Available */
+/* 
+Available: 
+Answer queries about what rooms are available for a given time slot
+*/
 SELECT Available_Resource.id, Available_Resource.room_no 
 FROM Available_Resource
 WHERE Available_Resource.id 
