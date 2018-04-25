@@ -165,7 +165,7 @@
                <br>
             </div>
             <?php
-               $sql = "SELECT meeting_id,team_name,amount FROM Meeting_Payment;";
+               $sql = "SELECT meeting_id,team_name,amount,status FROM Meeting_Payment;";
                $stmt = $conn->prepare($sql);
                $stmt->execute();
                $result = $stmt->fetchAll();
@@ -173,7 +173,13 @@
                // Print everything
                foreach($result as $row) {
                    echo " <li>" ;
-               	echo "The meeting is ",$row['meeting_id'] . ", team name that will pay ", $row["team_name"], " and the amount to be payed is ", $row["amount"].".";
+				   if($row['status'] == '0') {
+					   	echo "The meeting is ",$row['meeting_id'] . ", team that will pay ", $row["team_name"], " and the amount to be paid is ", $row["amount"].".";
+				   }
+				   else {
+						echo "The meeting is ",$row['meeting_id'] . ", team with name ", $row["team_name"], " has paid the amount ", $row["amount"].".";
+
+				   }
                          echo "</li>";
                }
                
