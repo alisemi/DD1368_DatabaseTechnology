@@ -123,29 +123,24 @@ for $country in doc("mondial.xml")/mondial/country
 where $country/encompassed/@continent="america"
 return $country/@car_code
 )
-
 let $cities := (
   for $city in doc("mondial.xml")/mondial/country/city
   where $city/population[@year = max($city/population/@year)] > 100000
   return $city/@id
 )
-
 for $airport in doc("mondial.xml")/mondial/airport
 where $airport/@city = $cities
 return <airport city="{$airport/@city}">{data($airport/name)}</airport>
-
 :)
 
 
 (: 7
-
 for $country in doc("mondial.xml")//country
 let $earliest := round-half-to-even($country/population[@year =  min($country/population/@year)], 1)
 let $latest   := round-half-to-even( $country/population[@year =  max($country/population/@year)], 1)
 let $ratio    :=round-half-to-even(  data($latest) div data($earliest),1)
 where  $ratio > 10
 return <country earliest="{$earliest}" latest= "{$latest}" ratio ="{$ratio}"> {data($country/name)}</country>
-
 :)
 
 (:8 too slow but works:)
@@ -154,26 +149,21 @@ let $cities :=
 for $city in doc("mondial.xml")//city
 where $city/population > 5000000
 return $city
-
 let $distances := 
 for $city in $cities
 for $other in $cities
 return <distance from="{$city/@id}" to="{$other/@id}">
 {math:sqrt( math:pow( (abs(data($city/latitude)-data($other/latitude) ) * 111),2 ) +
 math:pow( (abs(data($city/longitude)-data($other/longitude) ) * 111),2 ) )}</distance>
-
-
 let $two :=
 for $distance1 in $distances
 for $distance2 in $distances
 where $distance1/@to = $distance2/@from
 and ($distance1/@to != $distance1/@from and $distance2/@to != $distance2/@from)
 and $distance2/@to != $distance1/@from
-
 let $third := $distances[@from = $distance2/@to and @to = $distance1/@from]
 return <two first="{$distance1/@from}" second="{$distance2/@from}"
  third="{$third/@from}">{sum($distance1 + $distance2 + $third ) }</two>
-
 for $foo in $two
 where $foo = max($two)
 return $foo
@@ -229,7 +219,6 @@ declare function local:river_feed2(
 let $nile_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Nil"])
 let $rhein_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Rhein"])
 let $amazonas_system := local:river_feed2(doc("mondial.xml")//river[@id = "river-Amazonas"])
-
 return 'Nile' || ': ' || doc("mondial.xml")//river[@id = "river-Nil"]/length + max($nile_system)  || '&#xa;' || 
 'Rhein' || ': ' || doc("mondial.xml")//river[@id = "river-Rhein"]/length + max($rhein_system) || '&#xa;' || 
 'Amazonas' || ': ' || doc("mondial.xml")//river[@id = "river-Amazonas"]/length + max($amazonas_system)
@@ -249,7 +238,7 @@ declare function local:cross_border(
   where not (exists(doc("mondial.xml")//country[@car_code = data($border/@country)] intersect $visited))
   return doc("mondial.xml")//country[@car_code = data($border/@country)]
   return
-   if ( empty($borders) or $cross_number > 5) then (
+   if ( empty($borders) or $cross_number > 16) then (
       ()
    )
    else (
@@ -262,10 +251,62 @@ declare function local:cross_border(
    )
 };
 
+(:
 let $foo := distinct-values(local:cross_border(1,doc("mondial.xml")//country[@car_code = 'S'], (doc("mondial.xml")//country[@car_code = 'S']) ) )
 for $bar in $foo
 return $bar
+:)
 
 
 
+(: D :)
+(: ADD ATTRIBUTES :)
+declare function local:add-attributes
+  ( $elements as element()* ,
+    $attrNames as xs:QName* ,
+    $attrValues as xs:anyAtomicType* ) {
 
+   for $element in $elements
+   return element { node-name($element)}
+                  { for $attrName at $seq in $attrNames
+                    return if ($element/@*[node-name(.) = $attrName])
+                           then ()
+                           else attribute {$attrName}
+                                          {$attrValues[$seq]},
+                    $element/@*,
+                    $element/node() }
+ } ;
+
+ 
+declare function local:add-attribute
+  ( $element as element(), $mid_elem as element() )  as element()* {
+    let $sub_elements := $element/* 
+    return if( empty($sub_elements))
+    then (
+        local:add-attributes($mid_elem, QName('', 'value'),  data($element) )
+    )
+    else
+      let $qnames := for $sub in $sub_elements
+      return QName('', name($sub))
+      let $datas := for $sub in $sub_elements
+      return data($sub)
+      return local:add-attributes($mid_elem,$qnames,  $datas )
+    } ;
+ 
+ 
+for $elem in doc("songs.xml")/music/*
+let $mid_elem := element {name($elem)} {
+          for $child in $elem/(@*|text())
+          
+          return if ($child instance of attribute())
+          then( element 
+            { name($child)
+            }
+            { string($child)
+            })
+          else
+            ''
+            
+       }
+let $mid_elem_att := local:add-attribute($elem, $mid_elem)
+return $mid_elem_att
