@@ -1,4 +1,6 @@
-(:  SELECT name FROM Country EXCEPT SELECT name FROM Country WHERE EXISTS (SELECT country FROM geo_Island WHERE country = Country.code) ORDER BY name; :)
+(: 
+1
+ SELECT name FROM Country EXCEPT SELECT name FROM Country WHERE EXISTS (SELECT country FROM geo_Island WHERE country = Country.code) ORDER BY name; :)
 
 (:
 for $country in doc(" /Users/Doren Calliku/Desktop/mondial.xml")/mondial/country
@@ -330,6 +332,15 @@ declare function local:reachable(
    )
 };
 
+(:
 let $r := local:reachable(doc("mondial.xml")//country[@car_code= 'S'], (), (0), () )
 return $r
+:)
 
+(: C - 2 :)
+
+for $country in doc("mondial.xml")//country
+let $r := local:reachable($country, (), (0), () )
+let $highest_cross := max($r/@cross_border)
+let $high_country := $r[@cross_border = $highest_cross]
+return <country name="{$country/name}" highest_border="{$highest_cross}">{$high_country}</country>
