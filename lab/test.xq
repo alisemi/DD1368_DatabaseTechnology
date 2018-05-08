@@ -237,6 +237,55 @@ return 'Nile' || ': ' || doc("mondial.xml")//river[@id = "river-Nil"]/length + m
 'Amazonas' || ': ' || doc("mondial.xml")//river[@id = "river-Amazonas"]/length + max($amazonas_system)
 :)
 
+(: B :)
+
+declare function local:eliminate(
+	$arg1 as element()*,
+  $arg2 as xs:integer,
+  $to_eliminate as xs:anyAtomicType*
+) as xs:anyAtomicType*
+{
+	if($arg2 >= count($arg1) ) then
+  (
+   $to_eliminate
+  )
+	else if( $arg2 = 14 or $arg2 = 2 ) then 
+  (
+  	local:eliminate($arg1, $arg2 + 1, $to_eliminate)
+  ) 
+  else (
+  	let $intersected := local:value-intersect($to_eliminate,  tokenize(data($arg1[$arg2]), '\s+' ) )
+  	return local:eliminate($arg1, $arg2 + 1, $intersected)
+  )
+};
+
+declare function local:value-intersect
+  ( $arg1 as xs:anyAtomicType* ,
+    $arg2 as xs:anyAtomicType* )  as xs:anyAtomicType* {
+
+  distinct-values($arg1[.=$arg2])
+ } ;
+
+let $eu_organizations :=
+for $organization in doc("mondial.xml")//organization
+  let $headq := $organization/@headq
+  let $country_code := doc("mondial.xml")//city[@id = $headq]/@country
+  where doc("mondial.xml")//country[@car_code = $country_code]/encompassed[@continent = "europe"]
+  and starts-with(data($organization/name), "International")
+  return $organization
+
+let $org_members :=
+for $org in $eu_organizations
+	let $combined_members :=
+  for $member in $org/members
+  	return tokenize(data($member/@country), '\s+')
+  return <members>{$combined_members}</members>
+  
+
+let $initial := local:value-intersect(tokenize(data($org_members[1]), '\s+'), tokenize(data($org_members[2]), '\s+') )
+
+return local:eliminate($org_members, 3, $initial)
+
 (: C :)
 
 (: C-1 :)
