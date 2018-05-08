@@ -344,3 +344,56 @@ let $r := local:reachable($country, (), (0), () )
 let $highest_cross := max($r/@cross_border)
 let $high_country := $r[@cross_border = $highest_cross]
 return <country name="{$country/name}" highest_border="{$highest_cross}">{$high_country}</country>
+
+
+(: D :)
+(: ADD ATTRIBUTES :)
+declare function local:add-attributes
+  ( $elements as element()* ,
+    $attrNames as xs:QName* ,
+    $attrValues as xs:anyAtomicType* ) {
+
+   for $element in $elements
+   return element { node-name($element)}
+                  { for $attrName at $seq in $attrNames
+                    return if ($element/@*[node-name(.) = $attrName])
+                           then ()
+                           else attribute {$attrName}
+                                          {$attrValues[$seq]},
+                    $element/@*,
+                    $element/node() }
+ } ;
+
+ 
+declare function local:add-attribute
+  ( $element as element(), $mid_elem as element() )  as element()* {
+    let $sub_elements := $element/* 
+    return if( empty($sub_elements))
+    then (
+        local:add-attributes($mid_elem, QName('', 'value'),  data($element) )
+    )
+    else
+      let $qnames := for $sub in $sub_elements
+      return QName('', name($sub))
+      let $datas := for $sub in $sub_elements
+      return data($sub)
+      return local:add-attributes($mid_elem,$qnames,  $datas )
+    } ;
+ 
+ 
+for $elem in doc("songs.xml")/music/*
+let $mid_elem := element {name($elem)} {
+          for $child in $elem/(@*|text())
+          
+          return if ($child instance of attribute())
+          then( element 
+            { name($child)
+            }
+            { string($child)
+            })
+          else
+            ''
+            
+       }
+let $mid_elem_att := local:add-attribute($elem, $mid_elem)
+return $mid_elem_att 
